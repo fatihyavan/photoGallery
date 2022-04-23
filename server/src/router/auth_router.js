@@ -3,6 +3,7 @@ const auth_controller = require("../controller/auth_controller");
 
 router.post("/login", auth_controller.login);
 router.post("/register", auth_controller.register);
-router.get("/photoadd", auth_controller.photoAdd);
+router.post("/getphoto", auth_controller.getPhoto);
+router.post("/uploadphoto", auth_controller.uploadPhoto);
 
 module.exports = router;

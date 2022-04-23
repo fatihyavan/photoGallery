@@ -14,6 +14,10 @@ const photo = sequelize.define(
       allowNull: false,
     },
     photo: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+    photoname: {
       type: DataTypes.STRING,
       allowNull: true,
     },

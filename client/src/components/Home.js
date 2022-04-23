@@ -1,35 +1,74 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import Navbar from "./Navbar";
 import user from "../redux/reducers/rootReducers";
 import axios from "axios";
+import { userInfo } from "../redux/actions/actions";
+//import image from "../assets/images";
 
 export default function Home() {
   const userInfo = useSelector((state) => state.user);
-  const [a, setA] = useState();
-  console.log("homeeee");
-  console.log(userInfo);
-  const h = "1.jpeg";
-  let image = require("../assets/images/" + h);
-  const photoInput = (e) => {
-    axios.get("/photoadd");
-    console.log("Eklemeye ");
+  const [photo, setPhoto] = useState("");
+  const name = userInfo.name;
+  const convertBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const filereader = new FileReader();
+      filereader.readAsDataURL(file);
+      filereader.onload = () => {
+        resolve(filereader.result);
+      };
+      filereader.onerror = (error) => {
+        reject(error);
+      };
+    });
+  };
+
+  const uploadPhoto = async (e) => {
+    const file = e.target.files[0];
+    const base64 = await convertBase64(file);
+    setPhoto(base64);
+  };
+  const handleSubmit = (e) => {
     axios
-      .get("/photoget")
-      .then((res) => (a = res.data))
-      .catch((err) => console.log(err));
+      .post("/uploadphoto", { name, photo })
+      .then(console.log("aaaaa"))
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  const handleGetSubmit = (e) => {
+    const imageDom = (document.getElementById("imageDisplay").innerHTML = "");
+    const deneme = axios
+      .post("/getphoto", { name })
+      .then((response) => {
+        for (const photo of response.data) {
+          const imageDom = document.getElementById("imageDisplay");
+          const imageCreate = document.createElement("img");
+          imageCreate.src = photo;
+          imageDom.appendChild(imageCreate);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
   return (
     <div>
       <Navbar />
-      <div>
-        <img src={image} alt="1" />
-      </div>
-      ;
-      <button className="bg-red-800" onClick={photoInput}>
-        butt
-      </button>
+      <div></div>
       <p className="font-bold">gggggg</p>
+      <div>
+        <input
+          type="file"
+          name="file"
+          accept=".jpeg,.png,.jpg"
+          placeholder="Pick a photo"
+          onChange={uploadPhoto}
+        />
+        <div id="imageDisplay"></div>
+        <button onClick={handleSubmit}>Send</button>
+        <button onClick={handleGetSubmit}>Get all photos</button>
+      </div>
     </div>
   );
 }

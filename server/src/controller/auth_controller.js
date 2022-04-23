@@ -1,6 +1,8 @@
 const jwt = require("jsonwebtoken");
 const user = require("../config/model");
 const photo = require("../config/photoModel");
+const fs = require("fs");
+const crypto = require("crypto");
 
 const login = async (req, res) => {
   const userOne = await user.findOne({
@@ -56,15 +58,32 @@ const register = async (req, res) => {
   }
 };
 
-const photoAdd = async (req, res) => {
-  const photo1 = await photo.create({
-    name: "fatihee@gmail.com",
-    photo: "/home/fatih/Documents/photoData/1.jpg",
-  });
+const getPhoto = async (req, res) => {
+  console.log("fotograf aldı");
+  await photo
+    .findAll({ where: { name: req.body.name } })
+    .then(async (result) => {
+      const dizi = [];
+      for (const i of result) {
+        const data = await fs.promises.readFile(i.photo, "utf-8");
+        dizi.push(data);
+      }
+      res.json(dizi);
+    })
+    .catch((err) => console.log(err));
 };
 
-const photoGet = async (req, res) => {
-  const photo2 = await photo.findOne({ where: { name: "fatihee@gmail.com" } });
+const uploadPhoto = async (req, res) => {
+  const uniqueId = crypto.randomUUID();
+  const path = `/home/fatih/Documents/photoGallery1.0/server/src/images/${uniqueId}.txt`;
+  fs.writeFile(path, req.body.photo, (err) => {
+    console.log(err);
+  });
+  await photo.create({
+    name: req.body.name,
+    photo: path,
+  });
+  res.end();
 };
 
 const checkCokkie = async (req, res) => {
@@ -74,4 +93,10 @@ const checkCokkie = async (req, res) => {
   }
 };
 
-module.exports = { login, register, photoAdd, photoGet, checkCokkie };
+module.exports = {
+  login,
+  register,
+  getPhoto,
+  checkCokkie,
+  uploadPhoto,
+};
