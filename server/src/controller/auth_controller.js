@@ -3,6 +3,7 @@ const user = require("../config/model");
 const photo = require("../config/photoModel");
 const fs = require("fs");
 const crypto = require("crypto");
+const bcrypt = require("bcrypt");
 
 const login = async (req, res) => {
   const userOne = await user.findOne({
@@ -10,8 +11,12 @@ const login = async (req, res) => {
       email: req.body.email,
     },
   });
+  const controlPassword = await bcrypt.compare(
+    req.body.password,
+    userOne.password
+  );
   if (userOne) {
-    if (userOne.password === req.body.password) {
+    if (controlPassword) {
       const token = jwt.sign(
         { username: req.body.email },
         process.env.SECRET_KEY,
@@ -22,7 +27,7 @@ const login = async (req, res) => {
       await user.update({ token: token }, { where: { email: req.body.email } });
       res.cookie("access_token", token, {
         maxAge: 1000 * 60 * 60,
-        //  httpOnly: true,
+        httpOnly: true,
       });
       res.send({ auth: "Success" });
     } else {
@@ -40,11 +45,16 @@ const register = async (req, res) => {
       email: req.body.email,
     },
   });
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash(req.body.password, salt);
+  const token = jwt.sign({ username: req.body.email }, process.env.SECRET_KEY, {
+    expiresIn: "1h",
+  });
   if (!userCheck) {
     const user1 = await user
       .create({
         email: req.body.email,
-        password: req.body.password,
+        password: hashedPassword,
         isAdmin: "false",
         token: token,
       })
@@ -86,10 +96,19 @@ const uploadPhoto = async (req, res) => {
   res.end();
 };
 
-const checkCokkie = async (req, res) => {
-  if (req.headers.cookie) {
-    const b = req.headers.cookie.split(" ", 1);
-    res.send(b);
+const checkCookie = async (req, res) => {
+  const cookie = req.headers.cookie;
+
+  if (!cookie) {
+    res.send("false");
+  } else {
+    const token = cookie.split("access_token=")[1].split(";")[0];
+    const check = jwt.verify(token, process.env.SECRET_KEY);
+    console.log("backend girrr");
+    const userCookie = await user.findOne({ where: { email: check.username } });
+    if (userCookie.token === token) {
+      res.send("true");
+    }
   }
 };
 
@@ -97,6 +116,6 @@ module.exports = {
   login,
   register,
   getPhoto,
-  checkCokkie,
+  checkCookie,
   uploadPhoto,
 };

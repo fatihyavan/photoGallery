@@ -5,5 +5,6 @@ router.post("/login", auth_controller.login);
 router.post("/register", auth_controller.register);
 router.post("/getphoto", auth_controller.getPhoto);
 router.post("/uploadphoto", auth_controller.uploadPhoto);
+router.post("/checkcookie", auth_controller.checkCookie);
 
 module.exports = router;

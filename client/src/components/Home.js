@@ -1,10 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import Navbar from "./Navbar";
-import user from "../redux/reducers/rootReducers";
 import axios from "axios";
-import { userInfo } from "../redux/actions/actions";
-//import image from "../assets/images";
 
 export default function Home() {
   const userInfo = useSelector((state) => state.user);

@@ -30,7 +30,6 @@ export default function Login2() {
       .post("/login", { email, password })
       .then((res) => {
         setMessage(res.data.message);
-
         if (res.data.auth) {
           navigate("/home");
         }
@@ -41,9 +40,9 @@ export default function Login2() {
   };
 
   return (
-    <div className="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 ">
-      <div className="max-w-md w-full space-y-8 text-xl bg-zinc-600 outline ">
-        <div className="mt-10">
+    <div className="h-entire flex items-center justify-center py-12 px-4  bg-zinc-600 ">
+      <div className=" w-16 text-xl bg-zinc-200 outline ">
+        <div className="mt-10 ">
           <h2>Sign In Your Account</h2>
           {message}
         </div>

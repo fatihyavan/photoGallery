@@ -8,11 +8,10 @@ const cokkieParser = require("cookie-parser");
 
 const auth_router = require("./src/router/auth_router");
 
-app.use(bodyParser.json({ limit: "1mb" }));
+app.use(bodyParser.json({ limit: "100mb" }));
 app.use(
   bodyParser.urlencoded({
     extended: true,
-    limit: "1mb",
   })
 );
 app.use(cors({ origin: "http://localhost:3000", credentials: true }));

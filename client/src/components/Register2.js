@@ -15,6 +15,7 @@ class Register extends Component {
       passwordError: "",
       message: "",
       token: "",
+      errorCheck: "register",
     };
   }
 
@@ -34,15 +35,15 @@ class Register extends Component {
       this.state.password !== this.state.repassword
     );
   };
-  register = (e) => {
+  register = async (e) => {
     e.preventDefault();
     const { email, password } = this.state;
     console.log(email, password);
     this.props.register(this.state);
     const result = this.validate();
     if (!result) {
-      axios
-        .post("/user", { email, password })
+      await axios
+        .post("/register", { email, password })
         .then((res) => {
           console.log(res.data);
           this.setState({ message: res.data });
@@ -52,9 +53,16 @@ class Register extends Component {
           console.log(err);
         });
     }
+    if (
+      !this.state.emailError &&
+      !this.state.passwordError &&
+      !this.state.message
+    ) {
+      this.setState({ errorCheck: "login" });
+    }
     setTimeout(() => {
       this.setState({ emailError: "", passwordError: "", message: "" });
-    }, 2000);
+    }, 1000);
   };
   render() {
     return (
@@ -111,11 +119,8 @@ class Register extends Component {
               className="outline mt-6 rounded-xl p-1"
               onClick={this.register}
             >
-              Tıkla
+              <Link to={`/${this.state.errorCheck}`}>Register</Link>
             </button>
-            <Link className="outline mt-6 rounded-xl p-1" to={"/login"}>
-              Register
-            </Link>
           </form>
         </div>
       </div>
