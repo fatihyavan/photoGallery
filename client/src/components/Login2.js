@@ -42,7 +42,7 @@ export default function Login2() {
 
   return (
     <div className=" flex justify-center items-center  py-12 px-4  ">
-      <div className="h-96 w-1/3 text-xl bg-[#C4AA79] outline  rounded-xl">
+      <div className="h-96 w-1/3 text-xl bg-[#6C98DC] outline  rounded-xl">
         <div className="mt-10 pl-44 font-black">
           <h2>Sign In Your Account</h2>
           {message}

@@ -18,7 +18,7 @@ export default function Protected() {
         .catch((err) => console.log(err));
     };
     checkCokkie();
-  }, []);
+  });
 
   if (check) {
     console.log("girdi");
