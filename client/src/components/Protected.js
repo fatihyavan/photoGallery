@@ -7,7 +7,6 @@ import axios from "axios";
 export default function Protected() {
   const [check, setCheck] = useState("true");
   useEffect(() => {
-    console.log("ilk");
     const checkCokkie = async () => {
       await axios
         .post("/checkcookie", { withCredentials: true })
@@ -21,10 +20,8 @@ export default function Protected() {
   });
 
   if (check) {
-    console.log("girdi");
     return <Home />;
   } else {
-    console.log("burda mıyım");
     return <Navigate replace to={"/login "} />;
   }
 }
