@@ -41,8 +41,12 @@ export default function Home() {
         for (const photo of response.data) {
           const imageDom = document.getElementById("imageDisplay");
           const imageCreate = document.createElement("img");
+          const imageDiv = document.createElement("div");
           imageCreate.src = photo;
-          imageDom.appendChild(imageCreate);
+          imageCreate.classList.add("h-[480px]", "pt-4");
+          imageDiv.appendChild(imageCreate);
+          imageDiv.classList.add("hover:scale-95");
+          imageDom.appendChild(imageDiv);
         }
       })
       .catch((err) => {
@@ -50,21 +54,60 @@ export default function Home() {
       });
   };
   return (
-    <div>
+    <div className=" bg-[#E5E4E2]">
       <Navbar />
-      <div></div>
-      <p className="font-bold">gggggg</p>
-      <div>
+      <div className="flex justify-center h-12 ">
         <input
+          className="pt-4"
           type="file"
           name="file"
           accept=".jpeg,.png,.jpg"
           placeholder="Pick a photo"
           onChange={uploadPhoto}
         />
-        <div id="imageDisplay"></div>
-        <button onClick={handleSubmit}>Send</button>
-        <button onClick={handleGetSubmit}>Get all photos</button>
+        <div className="pt-4">
+          <button type="button" className="px-4   " onClick={handleSubmit}>
+            <span>Send</span>
+            <svg
+              className="w-6 h-6 mx-auto"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
+              ></path>
+            </svg>
+          </button>
+          <button type="button" className="pl-4" onClick={handleGetSubmit}>
+            <span>Get all photos</span>
+            <svg
+              className="w-6 h-6 mx-auto"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              ></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div className="flex  mx-auto ">
+        <div
+          id="imageDisplay"
+          className="pl-16 pt-8 flex flex-wrap space-x-4 "
+        ></div>
       </div>
     </div>
   );

@@ -103,11 +103,19 @@ const checkCookie = async (req, res) => {
     res.send("false");
   } else {
     const token = cookie.split("access_token=")[1].split(";")[0];
-    const check = jwt.verify(token, process.env.SECRET_KEY);
-    console.log("backend girrr");
-    const userCookie = await user.findOne({ where: { email: check.username } });
-    if (userCookie.token === token) {
-      res.send("true");
+    try {
+      const check = jwt.verify(token, process.env.SECRET_KEY);
+      const userCookie = await user.findOne({
+        where: { email: check.username },
+      });
+      if (userCookie.token === token) {
+        res.send("true");
+      } else {
+        res.send("false");
+      }
+    } catch (err) {
+      console.log(err);
+      res.send("false");
     }
   }
 };

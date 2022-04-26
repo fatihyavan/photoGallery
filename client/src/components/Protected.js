@@ -12,7 +12,6 @@ export default function Protected() {
       await axios
         .post("/checkcookie", { withCredentials: true })
         .then((response) => {
-          console.log("girer mi");
           setCheck(response.data);
           console.log(check);
         })
