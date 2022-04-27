@@ -12,7 +12,7 @@ export default function Protected() {
         .post("/checkcookie", { withCredentials: true })
         .then((response) => {
           setCheck(response.data);
-          console.log(check);
+          console.log(response.status);
         })
         .catch((err) => console.log(err));
     };

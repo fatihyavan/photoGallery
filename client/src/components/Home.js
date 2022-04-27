@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import Navbar from "./Navbar";
 import axios from "axios";
+import { useNavigate } from "react-router";
 
 export default function Home() {
   const userInfo = useSelector((state) => state.user);
   const [photo, setPhoto] = useState("");
+  const navigate = useNavigate();
   const name = userInfo.name;
   const convertBase64 = (file) => {
     return new Promise((resolve, reject) => {
@@ -51,6 +53,9 @@ export default function Home() {
       })
       .catch((err) => {
         console.log(err);
+        if (err.response.status === 401) {
+          navigate("/login");
+        }
       });
   };
   return (

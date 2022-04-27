@@ -26,12 +26,11 @@ const login = async (req, res) => {
       );
       await user.update({ token: token }, { where: { email: req.body.email } });
       res.cookie("access_token", token, {
-        maxAge: 1000 * 60 * 60,
+        maxAge: 1000 * 60,
         httpOnly: true,
       });
       res.send({ auth: "Success" });
     } else {
-      console.log("degilll");
       res.send({ message: "Password is incorrect" });
     }
   } else {
@@ -69,7 +68,6 @@ const register = async (req, res) => {
 };
 
 const getPhoto = async (req, res) => {
-  console.log("fotograf aldı");
   await photo
     .findAll({ where: { name: req.body.name } })
     .then(async (result) => {
