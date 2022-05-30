@@ -33,6 +33,9 @@ export default function Home() {
       .then(console.log("aaaaa"))
       .catch((err) => {
         console.log(err);
+        if (err.response.status === 401) {
+          navigate("/login");
+        }
       });
   };
   const handleGetSubmit = (e) => {

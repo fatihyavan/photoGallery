@@ -39,6 +39,9 @@ export default function Login2() {
         console.log(err);
       });
   };
+  const handleGmailInput = (e) => {
+    e.preventDefault();
+  };
 
   return (
     <div className=" flex justify-center items-center  py-12 px-4  ">
@@ -75,13 +78,20 @@ export default function Login2() {
             ></input>
             {password}
           </div>
-          <div className="pl-56">
+          <div className="pl-40 space-x-4">
             <button
               type="submit"
               className=" mt-6 pl-2 pr-2 rounded-xl outline"
               onClick={handleInput}
             >
               Login
+            </button>
+            <button
+              type="submit"
+              className="mt-6 pl-2 pr-2 rounded-xl outline"
+              onClick={handleGmailInput}
+            >
+              LogIn with Gmail
             </button>
           </div>
         </form>
