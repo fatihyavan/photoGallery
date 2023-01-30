@@ -1,6 +1,7 @@
 import axios from "axios";
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
+import jwt_decode from "jwt-decode";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { userInfo } from "../redux/actions/actions";
@@ -25,7 +26,7 @@ export default function Login2() {
     setPassword(e.target.value);
   };
   const handleInput = (e) => {
-    e.preventDefault();
+    // e.preventDefault();
     dispatch(userInfo({ email, password }));
     axios
       .post("/login", { email, password })
@@ -39,7 +40,50 @@ export default function Login2() {
         console.log(err);
       });
   };
-  const handleGmailInput = (e) => {
+
+  const googleMail = () => {
+    console.log("ccc");
+    console.log(email);
+    dispatch(userInfo({ email, password }));
+    axios
+      .post("/login", { email, password })
+      .then((res) => {
+        setMessage(res.data.message);
+        if (res.data.auth) {
+          navigate("/home");
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  function handleCredentialResponse(response) {
+    console.log("Encoded JWT ID token: " + response.credential);
+    const userObject = jwt_decode(response.credential);
+    const emailGoogle = userObject["email"];
+    setEmail(emailGoogle);
+    setPassword("98");
+  }
+  useEffect(() => googleMail(), [email]);
+  useEffect(() => {
+    /* global google */
+    google.accounts.id.initialize({
+      client_id:
+        "129225291790-ttd65k32ip9ajetalrtkbt37tpujtpuv.apps.googleusercontent.com",
+      callback: handleCredentialResponse,
+    });
+    google.accounts.id.renderButton(
+      document.getElementById("signInDiv"),
+      { theme: "outline", size: "large" } // customization attributes
+    );
+  }, []);
+
+  // const handleGoogle = () => {
+  //   window.open("http://localhost:8080/auth/google", "newWindow");
+  // };
+  const handleRegister = (e) => {
+    navigate("/register");
     e.preventDefault();
   };
 
@@ -89,10 +133,11 @@ export default function Login2() {
             <button
               type="submit"
               className="mt-6 pl-2 pr-2 rounded-xl outline"
-              onClick={handleGmailInput}
+              onClick={handleRegister}
             >
-              LogIn with Gmail
+              Register
             </button>
+            <div id="signInDiv"></div>
           </div>
         </form>
       </div>

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { userInfo } from "../redux/actions/actions";
 import axios from "axios";
+import GoogleLogin from "react-google-login";
 
 class Register extends Component {
   constructor(props) {
@@ -18,7 +19,23 @@ class Register extends Component {
       errorCheck: "register",
     };
   }
-
+  handleRegisterGoogle = (tokenId) => {
+    console.log("deneme");
+    axios
+      .post("/auth/google", { idToken: tokenId })
+      .then((res) => console.log(res.data))
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  responseFromGoogle = (response) => {
+    console.log(response);
+    this.handleRegisterGoogle(response.tokenId);
+  };
+  failure = (res) => {
+    console.log(res);
+    console.log("yanlis hocam");
+  };
   handleChange = (e) => this.setState({ [e.target.name]: e.target.value });
   validate = () => {
     const regex = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
@@ -114,13 +131,26 @@ class Register extends Component {
               {this.state.repassword}
               {this.state.password}
             </div>
-            <button
-              type="submit"
-              className="outline mt-6 rounded-xl p-1"
-              onClick={this.register}
-            >
-              <Link to={`/${this.state.errorCheck}`}>Register</Link>
-            </button>
+            <div>
+              <button
+                type="submit"
+                className="outline mt-6 rounded-xl p-1"
+                onClick={this.register}
+              >
+                <Link to={`/${this.state.errorCheck}`}>Register</Link>
+              </button>
+            </div>
+            <div>
+              <GoogleLogin
+                clientId={
+                  "781844016670-30qo0rpf9a6oesnpsqpeqir7ogr9d5l7.apps.googleusercontent.com"
+                }
+                buttonText="Log in with Google"
+                onSuccess={this.responseFromGoogle}
+                onFailure={this.failure}
+                cookiePolicy={"single_host_origin"}
+              />
+            </div>
           </form>
         </div>
       </div>

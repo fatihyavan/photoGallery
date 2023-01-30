@@ -6,6 +6,8 @@ const crypto = require("crypto");
 const bcrypt = require("bcrypt");
 
 const login = async (req, res) => {
+  console.log("loggggg");
+  console.log(req.body);
   const userOne = await user.findOne({
     where: {
       email: req.body.email,
@@ -61,7 +63,6 @@ const register = async (req, res) => {
       .catch((err) => {
         console.log(err);
       });
-    console.log(token);
   } else {
     res.send("Kullanici var yeni email dene");
   }
@@ -96,10 +97,10 @@ const uploadPhoto = async (req, res) => {
 
 const checkCookie = async (req, res) => {
   const cookie = req.headers.cookie;
-
+  // const access_kontrol = cookie.indexOf("access_token");
   if (!cookie) {
     res.send("false");
-  } else {
+  } else if (cookie && cookie.indexOf("access_token") != -1) {
     const token = cookie.split("access_token=")[1].split(";")[0];
     try {
       const check = jwt.verify(token, process.env.SECRET_KEY);
@@ -112,7 +113,6 @@ const checkCookie = async (req, res) => {
         res.send("false");
       }
     } catch (err) {
-      console.log(err);
       res.send("false");
     }
   }
